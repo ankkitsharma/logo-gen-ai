@@ -75,12 +75,8 @@ Return ONLY the text of the prompt and nothing else. Do not use quotes or markdo
       return { error: 'Failed to generate image from AI.' };
     }
 
-    // 3. Save Image
-    const filename = `${sessionId}-${Date.now()}.png`;
-    const filepath = path.join(process.cwd(), 'public/logos', filename);
-    fs.writeFileSync(filepath, Buffer.from(base64Image, 'base64'));
-
-    const publicUrl = `/logos/${filename}`;
+    // 3. Use Base64 Image directly (avoids read-only file system issues in Vercel)
+    const publicUrl = `data:image/jpeg;base64,${base64Image}`;
     
     addGeneratedLogo(sessionId, publicUrl, {
       finalPrompt: optimizedPrompt,
